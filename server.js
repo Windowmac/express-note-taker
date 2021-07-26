@@ -5,8 +5,6 @@ const fs = require('fs');
 const PORT = 3030;
 const uuid = require('./helpers/uuid');
 
-const db = require('./db/db.json');
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -16,14 +14,18 @@ app.get('/notes', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-    res.json(db);
+    const database = JSON.parse(fs.readFileSync(__dirname + '/db/db.json', 'utf8', err => {throw new Error(err);}));
+    res.json(database);
 })
 
 app.post('/api/notes', (req, res) => {
     if(req.body && req.body.title && req.body.text){
         const newNote = req.body;
         newNote.id = uuid();
-        const newDbArray = db.push(req.body);
+
+        const newDbArray = JSON.parse(fs.readFileSync(__dirname + '/db/db.json', 'utf8', err => {throw new Error(err);}));
+        newDbArray.push(req.body);
+
         fs.writeFileSync(__dirname + '/db/db.json', JSON.stringify(newDbArray), (err) => {throw new Error(err);});
         res.json(`Note || ${newNote.id} || added successfully 🚀`);
     } else {
@@ -32,11 +34,12 @@ app.post('/api/notes', (req, res) => {
 });
 
 app.delete('/api/notes/:id', (req, res) => {
-    const filteredDb = db.filter((item) => item.id !== req.params.id);
-    console.log(filteredDb);
-    console.log(db);
-    if(filteredDb.length < db.length){
+    const database = JSON.parse(fs.readFileSync(__dirname + '/db/db.json', 'utf8', err => {throw new Error(err);}));
+    const filteredDb = database.filter((item) => item.id !== req.params.id);
+    
+    if(filteredDb.length < database.length){
         fs.writeFileSync(__dirname + '/db/db.json', JSON.stringify(filteredDb), (err) => {throw new Error(err);});
+        console.log('filtered(removed) array: ' + JSON.stringify(filteredDb));
         res.json(`Note || ${req.params.id} || removed successfully 🚀`);
     } else {
         res.json('problem removing note');
