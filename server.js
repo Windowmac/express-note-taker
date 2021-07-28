@@ -27,7 +27,7 @@ app.post('/api/notes', (req, res) => {
         newDbArray.push(req.body);
 
         fs.writeFileSync(__dirname + '/db/db.json', JSON.stringify(newDbArray), (err) => {throw new Error(err);});
-        res.json(`Note || ${newNote.id} || added successfully 🚀`);
+        res.send(newNote);
     } else {
         res.json('Problem adding note');
     }   
@@ -39,7 +39,6 @@ app.delete('/api/notes/:id', (req, res) => {
     
     if(filteredDb.length < database.length){
         fs.writeFileSync(__dirname + '/db/db.json', JSON.stringify(filteredDb), (err) => {throw new Error(err);});
-        console.log('filtered(removed) array: ' + JSON.stringify(filteredDb));
         res.json(`Note || ${req.params.id} || removed successfully 🚀`);
     } else {
         res.json('problem removing note');
