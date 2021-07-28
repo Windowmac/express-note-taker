@@ -19,7 +19,7 @@
 
   ## Installation
   ___
-  heroku
+  visit the deployed app at: [Note Taker Homepage](https://arcane-escarpment-84918.herokuapp.com/notes.html)
 
   ## Usage
   ___
@@ -27,7 +27,10 @@
 
   ## Video
   ___
-  [![Demo Video](none)](none "Demo Video")
+ No video yet available. Here are some images:
+![landing page](./public/assets/images/note-taker1.png)
+![notes page](./public/assets/images/note-taker2.png)
+
 
   ## Collaboration:
   ___
